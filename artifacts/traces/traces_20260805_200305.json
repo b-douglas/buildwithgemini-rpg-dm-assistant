@@ -1,0 +1,1083 @@
+{
+  "eval_cases": [
+    {
+      "prompt": {
+        "parts": [
+          {
+            "text": "Roll a 1d20+5 stealth check for Elion."
+          }
+        ],
+        "role": "user"
+      },
+      "responses": [
+        {
+          "response": {
+            "parts": [
+              {
+                "text": "**Stealth Check for Elion:**\n\n🎲 **Roll:** `1d20+5` \n▶ **Result:** [10] + 5 = **15**\n\n*Elion sticks to the shadows, stepping softly across the stone floor with a total Stealth result of **15**.*"
+              }
+            ],
+            "role": "model"
+          }
+        }
+      ],
+      "eval_case_id": "dice_roll",
+      "agent_data": {
+        "agents": {
+          "root_agent": {
+            "agent_id": "root_agent",
+            "agent_type": "LlmAgent",
+            "description": "",
+            "instruction": "You are the ultimate D&D 5e RPG Dungeon Master Assistant. You help Dungeon Masters manage campaign notes, roll dice, look up 5e rules, generate random encounters, impersonate NPCs with dialogue, describe immersive scenes, and track party loot and campaign history. Always personalize responses based on remembered character facts, campaign beats, and player preferences.",
+            "tools": [
+              {
+                "function_declarations": [
+                  {
+                    "description": "Rolls D&D dice using cryptographically secure random numbers.\n\nArgs:\n    dice_expression: Expression like '1d20+5', '2d6+3', '1d100', '4d6'.\n\nReturns:\n    String with detailed rolls, modifiers, and final total sum.",
+                    "name": "roll_dice",
+                    "parameters": {
+                      "properties": {
+                        "dice_expression": {
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "dice_expression"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Retrieves authoritative D&D 5e rules information.\n\nArgs:\n    topic: The rule, condition, or mechanic to look up (e.g., 'advantage', 'grappled', 'concentration', 'cover', 'resting').\n\nReturns:\n    String summarizing the official 5e rules for the topic.",
+                    "name": "rules_lawyer_lookup",
+                    "parameters": {
+                      "properties": {
+                        "topic": {
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "topic"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Generates a random D&D combat encounter tailored to party level, difficulty, and environment.\n\nArgs:\n    party_level: Average level of the player characters (1 to 20).\n    difficulty: Desired difficulty ('Easy', 'Medium', 'Hard', 'Deadly').\n    environment: Terrain type (e.g., 'Forest', 'Dungeon', 'Mountain', 'Swamp', 'Underdark').\n\nReturns:\n    Formatted summary of the encounter including monsters, tactics, and environmental features.",
+                    "name": "generate_random_encounter",
+                    "parameters": {
+                      "properties": {
+                        "party_level": {
+                          "type": "INTEGER"
+                        },
+                        "difficulty": {
+                          "default": "Medium",
+                          "type": "STRING"
+                        },
+                        "environment": {
+                          "default": "Forest",
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "party_level"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Generates an NPC personality, dialogue snippet, and quest hook on the fly.\n\nArgs:\n    npc_role: The role or archetype of the NPC (e.g. 'Merchant', 'Guard', 'Blacksmith', 'Wizard', 'Innkeeper').\n    tone: The tone/vibe of the interaction (e.g. 'mysterious', 'friendly', 'suspicious', 'panicked').\n    location: Current setting (e.g. 'Tavern', 'Market Square', 'Castle Gate').\n\nReturns:\n    String detailing NPC profile, sample dialogue, and secret motivation.",
+                    "name": "npc_impersonator",
+                    "parameters": {
+                      "properties": {
+                        "npc_role": {
+                          "type": "STRING"
+                        },
+                        "tone": {
+                          "default": "mysterious",
+                          "type": "STRING"
+                        },
+                        "location": {
+                          "default": "Tavern",
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "npc_role"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Generates sensory flavor text for the Dungeon Master to describe scenes to players.\n\nArgs:\n    location_type: Type of location (e.g. 'Ancient Tomb', 'Dark Forest', 'Flooded Cavern').\n    atmosphere: Mood of the scene (e.g. 'tense', 'eerie', 'majestic', 'decaying').\n\nReturns:\n    Sensory description suitable for reading aloud during game sessions.",
+                    "name": "adventure_flavor_text",
+                    "parameters": {
+                      "properties": {
+                        "location_type": {
+                          "type": "STRING"
+                        },
+                        "atmosphere": {
+                          "default": "tense",
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "location_type"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              }
+            ],
+            "sub_agents": []
+          }
+        },
+        "turns": [
+          {
+            "turn_index": 0,
+            "turn_id": "turn_0",
+            "events": [
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "NqDp1xoF",
+                        "args": {
+                          "dice_expression": "1d20+5"
+                        },
+                        "name": "roll_dice"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "NqDp1xoF",
+                        "name": "roll_dice",
+                        "response": {
+                          "result": "Rolled 1d20+5: [10] +5 = Total: 15"
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              },
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "**Stealth Check for Elion:**\n\n🎲 **Roll:** `1d20+5` \n▶ **Result:** [10] + 5 = **15**\n\n*Elion sticks to the shadows, stepping softly across the stone floor with a total Stealth result of **15**.*"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "prompt": {
+        "parts": [
+          {
+            "text": "What are the rules for Advantage and Disadvantage in D&D 5e?"
+          }
+        ],
+        "role": "user"
+      },
+      "responses": [
+        {
+          "response": {
+            "parts": [
+              {
+                "text": "In D&D 5e, **Advantage** and **Disadvantage** reflect special circumstances that make a d20 roll either particularly favorable or challenging. Here is the official rule breakdown:\n\n---\n\n### **1. Basic Mechanics**\n* **Advantage:** Roll **two d20s** and use the **higher** result.\n* **Disadvantage:** Roll **two d20s** and use the **lower** result.\n\n> *Example:* If you roll a 14 and a 6 with Advantage, you take the **14**. If you roll the same numbers with Disadvantage, you take the **6**.\n\n---\n\n### **2. Modifiers & Bonuses**\nAfter determining which d20 roll to use (higher or lower), you apply standard modifiers, proficiency bonuses, and context-specific situational bonuses (like *Bless* or *Guidance*) to that final number as normal.\n\n---\n\n### **3. Cancellation & Stacking Rules**\n* **No Stacking:** Having multiple sources of Advantage (or Disadvantage) does **not** allow you to roll additional d20s. You only ever roll **two** d20s.\n* **Cancellation:** If you have **at least one source of Advantage** and **at least one source of Disadvantage**, they **completely cancel each other out**, regardless of how many sources of either you have.\n  * *Example:* If you have 3 separate features granting you Advantage and 1 condition giving you Disadvantage, you roll **a single d20** with no Advantage or Disadvantage.\n\n---\n\n### **4. Impact on Passive Checks**\nIf a character has Advantage or Disadvantage on a task that uses a **Passive Check** (like Passive Perception or Passive Investigation):\n* **Advantage:** Add **+5** to the passive score.\n* **Disadvantage:** Subtract **-5** from the passive score.\n\n---\n\n### **5. Key Interactions & Notes**\n* **Rerolls (e.g., *Lucky* feat, Halfling *Lucky* trait):** When you reroll a die, you choose which die to replace. Specific features may alter or override standard dice resolution.\n* **Applicability:** Advantage and Disadvantage apply to **Ability Checks**, **Attack Rolls**, and **Saving Throws**."
+              }
+            ],
+            "role": "model"
+          }
+        }
+      ],
+      "eval_case_id": "rules_lookup",
+      "agent_data": {
+        "agents": {
+          "root_agent": {
+            "agent_id": "root_agent",
+            "agent_type": "LlmAgent",
+            "description": "",
+            "instruction": "You are the ultimate D&D 5e RPG Dungeon Master Assistant. You help Dungeon Masters manage campaign notes, roll dice, look up 5e rules, generate random encounters, impersonate NPCs with dialogue, describe immersive scenes, and track party loot and campaign history. Always personalize responses based on remembered character facts, campaign beats, and player preferences.",
+            "tools": [
+              {
+                "function_declarations": [
+                  {
+                    "description": "Rolls D&D dice using cryptographically secure random numbers.\n\nArgs:\n    dice_expression: Expression like '1d20+5', '2d6+3', '1d100', '4d6'.\n\nReturns:\n    String with detailed rolls, modifiers, and final total sum.",
+                    "name": "roll_dice",
+                    "parameters": {
+                      "properties": {
+                        "dice_expression": {
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "dice_expression"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Retrieves authoritative D&D 5e rules information.\n\nArgs:\n    topic: The rule, condition, or mechanic to look up (e.g., 'advantage', 'grappled', 'concentration', 'cover', 'resting').\n\nReturns:\n    String summarizing the official 5e rules for the topic.",
+                    "name": "rules_lawyer_lookup",
+                    "parameters": {
+                      "properties": {
+                        "topic": {
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "topic"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Generates a random D&D combat encounter tailored to party level, difficulty, and environment.\n\nArgs:\n    party_level: Average level of the player characters (1 to 20).\n    difficulty: Desired difficulty ('Easy', 'Medium', 'Hard', 'Deadly').\n    environment: Terrain type (e.g., 'Forest', 'Dungeon', 'Mountain', 'Swamp', 'Underdark').\n\nReturns:\n    Formatted summary of the encounter including monsters, tactics, and environmental features.",
+                    "name": "generate_random_encounter",
+                    "parameters": {
+                      "properties": {
+                        "party_level": {
+                          "type": "INTEGER"
+                        },
+                        "difficulty": {
+                          "default": "Medium",
+                          "type": "STRING"
+                        },
+                        "environment": {
+                          "default": "Forest",
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "party_level"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Generates an NPC personality, dialogue snippet, and quest hook on the fly.\n\nArgs:\n    npc_role: The role or archetype of the NPC (e.g. 'Merchant', 'Guard', 'Blacksmith', 'Wizard', 'Innkeeper').\n    tone: The tone/vibe of the interaction (e.g. 'mysterious', 'friendly', 'suspicious', 'panicked').\n    location: Current setting (e.g. 'Tavern', 'Market Square', 'Castle Gate').\n\nReturns:\n    String detailing NPC profile, sample dialogue, and secret motivation.",
+                    "name": "npc_impersonator",
+                    "parameters": {
+                      "properties": {
+                        "npc_role": {
+                          "type": "STRING"
+                        },
+                        "tone": {
+                          "default": "mysterious",
+                          "type": "STRING"
+                        },
+                        "location": {
+                          "default": "Tavern",
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "npc_role"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Generates sensory flavor text for the Dungeon Master to describe scenes to players.\n\nArgs:\n    location_type: Type of location (e.g. 'Ancient Tomb', 'Dark Forest', 'Flooded Cavern').\n    atmosphere: Mood of the scene (e.g. 'tense', 'eerie', 'majestic', 'decaying').\n\nReturns:\n    Sensory description suitable for reading aloud during game sessions.",
+                    "name": "adventure_flavor_text",
+                    "parameters": {
+                      "properties": {
+                        "location_type": {
+                          "type": "STRING"
+                        },
+                        "atmosphere": {
+                          "default": "tense",
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "location_type"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              }
+            ],
+            "sub_agents": []
+          }
+        },
+        "turns": [
+          {
+            "turn_index": 0,
+            "turn_id": "turn_0",
+            "events": [
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "TWOPRNCi",
+                        "args": {
+                          "topic": "advantage"
+                        },
+                        "name": "rules_lawyer_lookup"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "TWOPRNCi",
+                        "name": "rules_lawyer_lookup",
+                        "response": {
+                          "result": "Advantage: Roll two d20s and take the higher result. Disadvantage: Roll two d20s and take the lower result. Advantage and Disadvantage cancel each other out regardless of how many sources grant either."
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              },
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "In D&D 5e, **Advantage** and **Disadvantage** reflect special circumstances that make a d20 roll either particularly favorable or challenging. Here is the official rule breakdown:\n\n---\n\n### **1. Basic Mechanics**\n* **Advantage:** Roll **two d20s** and use the **higher** result.\n* **Disadvantage:** Roll **two d20s** and use the **lower** result.\n\n> *Example:* If you roll a 14 and a 6 with Advantage, you take the **14**. If you roll the same numbers with Disadvantage, you take the **6**.\n\n---\n\n### **2. Modifiers & Bonuses**\nAfter determining which d20 roll to use (higher or lower), you apply standard modifiers, proficiency bonuses, and context-specific situational bonuses (like *Bless* or *Guidance*) to that final number as normal.\n\n---\n\n### **3. Cancellation & Stacking Rules**\n* **No Stacking:** Having multiple sources of Advantage (or Disadvantage) does **not** allow you to roll additional d20s. You only ever roll **two** d20s.\n* **Cancellation:** If you have **at least one source of Advantage** and **at least one source of Disadvantage**, they **completely cancel each other out**, regardless of how many sources of either you have.\n  * *Example:* If you have 3 separate features granting you Advantage and 1 condition giving you Disadvantage, you roll **a single d20** with no Advantage or Disadvantage.\n\n---\n\n### **4. Impact on Passive Checks**\nIf a character has Advantage or Disadvantage on a task that uses a **Passive Check** (like Passive Perception or Passive Investigation):\n* **Advantage:** Add **+5** to the passive score.\n* **Disadvantage:** Subtract **-5** from the passive score.\n\n---\n\n### **5. Key Interactions & Notes**\n* **Rerolls (e.g., *Lucky* feat, Halfling *Lucky* trait):** When you reroll a die, you choose which die to replace. Specific features may alter or override standard dice resolution.\n* **Applicability:** Advantage and Disadvantage apply to **Ability Checks**, **Attack Rolls**, and **Saving Throws**."
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "prompt": {
+        "parts": [
+          {
+            "text": "Generate a medium difficulty encounter for a Level 5 party in an Ancient Ruins."
+          }
+        ],
+        "role": "user"
+      },
+      "responses": [
+        {
+          "response": {
+            "parts": [
+              {
+                "text": "### 🏛️ **Medium Encounter: Ancient Ruins (Party Level 5)**\n\n---\n\n### 📜 **Read-Aloud Flavor Text**\n> *\"The air grows heavy with the scent of damp stone and ancient dust as you step deeper into the crumbling courtyard. Cold moisture clings to your skin, and the slow, rhythmic dripping of water from cracked lintels breaks the oppressive silence. Moss-draped marble columns lie broken like giant fallen bones, casting long, twisted shadows across forgotten mosaics.\"*\n\n---\n\n### ⚔️ **Encounter Details**\n* **Difficulty:** Medium (Target XP Budget: ~2,000 XP)\n* **Monsters:** \n  * **2× Owlbears** (*CR 3 each, 700 XP each*) — **Total XP:** 1,400 (Adjusted: 2,100 XP)  \n  * *Alternative:* **1× Bandit Captain (CR 2)** + **3× Bandits (CR 1/8)** taking shelter in the ruins.\n\n---\n\n### 🗺️ **Tactical Terrain & Features**\n* **Crumbling Pillars & Walls:** Provide **Half Cover (+2 AC and Dexterity saving throws)** or **Three-Quarter Cover (+5 AC/Dex saves)**.\n* **Rubbles & Fallen Masonry:** Areas around broken structures count as **Difficult Terrain**.\n* **Elevated Ledges:** A 10-foot broken terrace gives ranged combatants high ground and cover.\n\n---\n\n### 🎯 **Tactics & DM Tips**\n1. **Aggressive Territorial Behavior:** The Owlbears have made their den in a collapsed chamber beneath the ruin. They mark their territory with bone fragments and claw marks on the stone.\n2. **Ambush / Pincer Attack:** One Owlbear stalks along the elevated ledge to pounce from above (**Drop Attack / Advantage on initial stealth**), while the second charges through the overgrown archway to lock down frontline fighters with its *Keen Sight and Smell*.\n3. **Morale / Escalation:** If one Owlbear falls below 15 HP, it roars fiercely, forcing a DC 12 Wisdom check or imposing the *Frightened* condition on nearby non-player targets or hirelings, before attempting a desperate flee.\n\n---\n\n### 💰 **Loot & Treasure Hook**\n* **Hidden Nest / Chest:** Tucked under a fallen slab where the Owlbears nest:\n  * **150 gp** in ancient, tarnished silver and gold coins from a forgotten kingdom.\n  * **1× Potion of Healing (Greater)**\n  * **A carved ivory medallion** worth 75 gp (could be a key to a deeper vault in the ruins!)."
+              }
+            ],
+            "role": "model"
+          }
+        }
+      ],
+      "eval_case_id": "random_encounter",
+      "agent_data": {
+        "agents": {
+          "root_agent": {
+            "agent_id": "root_agent",
+            "agent_type": "LlmAgent",
+            "description": "",
+            "instruction": "You are the ultimate D&D 5e RPG Dungeon Master Assistant. You help Dungeon Masters manage campaign notes, roll dice, look up 5e rules, generate random encounters, impersonate NPCs with dialogue, describe immersive scenes, and track party loot and campaign history. Always personalize responses based on remembered character facts, campaign beats, and player preferences.",
+            "tools": [
+              {
+                "function_declarations": [
+                  {
+                    "description": "Rolls D&D dice using cryptographically secure random numbers.\n\nArgs:\n    dice_expression: Expression like '1d20+5', '2d6+3', '1d100', '4d6'.\n\nReturns:\n    String with detailed rolls, modifiers, and final total sum.",
+                    "name": "roll_dice",
+                    "parameters": {
+                      "properties": {
+                        "dice_expression": {
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "dice_expression"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Retrieves authoritative D&D 5e rules information.\n\nArgs:\n    topic: The rule, condition, or mechanic to look up (e.g., 'advantage', 'grappled', 'concentration', 'cover', 'resting').\n\nReturns:\n    String summarizing the official 5e rules for the topic.",
+                    "name": "rules_lawyer_lookup",
+                    "parameters": {
+                      "properties": {
+                        "topic": {
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "topic"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Generates a random D&D combat encounter tailored to party level, difficulty, and environment.\n\nArgs:\n    party_level: Average level of the player characters (1 to 20).\n    difficulty: Desired difficulty ('Easy', 'Medium', 'Hard', 'Deadly').\n    environment: Terrain type (e.g., 'Forest', 'Dungeon', 'Mountain', 'Swamp', 'Underdark').\n\nReturns:\n    Formatted summary of the encounter including monsters, tactics, and environmental features.",
+                    "name": "generate_random_encounter",
+                    "parameters": {
+                      "properties": {
+                        "party_level": {
+                          "type": "INTEGER"
+                        },
+                        "difficulty": {
+                          "default": "Medium",
+                          "type": "STRING"
+                        },
+                        "environment": {
+                          "default": "Forest",
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "party_level"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Generates an NPC personality, dialogue snippet, and quest hook on the fly.\n\nArgs:\n    npc_role: The role or archetype of the NPC (e.g. 'Merchant', 'Guard', 'Blacksmith', 'Wizard', 'Innkeeper').\n    tone: The tone/vibe of the interaction (e.g. 'mysterious', 'friendly', 'suspicious', 'panicked').\n    location: Current setting (e.g. 'Tavern', 'Market Square', 'Castle Gate').\n\nReturns:\n    String detailing NPC profile, sample dialogue, and secret motivation.",
+                    "name": "npc_impersonator",
+                    "parameters": {
+                      "properties": {
+                        "npc_role": {
+                          "type": "STRING"
+                        },
+                        "tone": {
+                          "default": "mysterious",
+                          "type": "STRING"
+                        },
+                        "location": {
+                          "default": "Tavern",
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "npc_role"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Generates sensory flavor text for the Dungeon Master to describe scenes to players.\n\nArgs:\n    location_type: Type of location (e.g. 'Ancient Tomb', 'Dark Forest', 'Flooded Cavern').\n    atmosphere: Mood of the scene (e.g. 'tense', 'eerie', 'majestic', 'decaying').\n\nReturns:\n    Sensory description suitable for reading aloud during game sessions.",
+                    "name": "adventure_flavor_text",
+                    "parameters": {
+                      "properties": {
+                        "location_type": {
+                          "type": "STRING"
+                        },
+                        "atmosphere": {
+                          "default": "tense",
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "location_type"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              }
+            ],
+            "sub_agents": []
+          }
+        },
+        "turns": [
+          {
+            "turn_index": 0,
+            "turn_id": "turn_0",
+            "events": [
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "niuOAp5l",
+                        "args": {
+                          "party_level": 5,
+                          "environment": "Ancient Ruins",
+                          "difficulty": "Medium"
+                        },
+                        "name": "generate_random_encounter"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "niuOAp5l",
+                        "name": "generate_random_encounter",
+                        "response": {
+                          "result": "⚔️ **Random Encounter [Medium - Level 5 in Ancient Ruins]**\n- **Monsters:** 2x Owlbears (CR 3) or 4x Bandits led by a Bandit Captain\n- **Tactical Terrain:** Ancient Ruins feature — Dense foliage / elevated cliffs providing half cover and difficult terrain.\n- **Objective/Hook:** The creatures are guarding a hidden chest or ambushing travelers along the trail."
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              },
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "VwfobjFA",
+                        "args": {
+                          "atmosphere": "eerie",
+                          "location_type": "Ancient Ruins"
+                        },
+                        "name": "adventure_flavor_text"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "VwfobjFA",
+                        "name": "adventure_flavor_text",
+                        "response": {
+                          "result": "📜 **Scene Description (Ancient Ruins - Eerie)**:\nThe air grows heavy with the scent of damp stone and ancient dust. Cold air clings to skin, and echoing drips from unseen stalactites break the oppressive silence of the Ancient Ruins."
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              },
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "### 🏛️ **Medium Encounter: Ancient Ruins (Party Level 5)**\n\n---\n\n### 📜 **Read-Aloud Flavor Text**\n> *\"The air grows heavy with the scent of damp stone and ancient dust as you step deeper into the crumbling courtyard. Cold moisture clings to your skin, and the slow, rhythmic dripping of water from cracked lintels breaks the oppressive silence. Moss-draped marble columns lie broken like giant fallen bones, casting long, twisted shadows across forgotten mosaics.\"*\n\n---\n\n### ⚔️ **Encounter Details**\n* **Difficulty:** Medium (Target XP Budget: ~2,000 XP)\n* **Monsters:** \n  * **2× Owlbears** (*CR 3 each, 700 XP each*) — **Total XP:** 1,400 (Adjusted: 2,100 XP)  \n  * *Alternative:* **1× Bandit Captain (CR 2)** + **3× Bandits (CR 1/8)** taking shelter in the ruins.\n\n---\n\n### 🗺️ **Tactical Terrain & Features**\n* **Crumbling Pillars & Walls:** Provide **Half Cover (+2 AC and Dexterity saving throws)** or **Three-Quarter Cover (+5 AC/Dex saves)**.\n* **Rubbles & Fallen Masonry:** Areas around broken structures count as **Difficult Terrain**.\n* **Elevated Ledges:** A 10-foot broken terrace gives ranged combatants high ground and cover.\n\n---\n\n### 🎯 **Tactics & DM Tips**\n1. **Aggressive Territorial Behavior:** The Owlbears have made their den in a collapsed chamber beneath the ruin. They mark their territory with bone fragments and claw marks on the stone.\n2. **Ambush / Pincer Attack:** One Owlbear stalks along the elevated ledge to pounce from above (**Drop Attack / Advantage on initial stealth**), while the second charges through the overgrown archway to lock down frontline fighters with its *Keen Sight and Smell*.\n3. **Morale / Escalation:** If one Owlbear falls below 15 HP, it roars fiercely, forcing a DC 12 Wisdom check or imposing the *Frightened* condition on nearby non-player targets or hirelings, before attempting a desperate flee.\n\n---\n\n### 💰 **Loot & Treasure Hook**\n* **Hidden Nest / Chest:** Tucked under a fallen slab where the Owlbears nest:\n  * **150 gp** in ancient, tarnished silver and gold coins from a forgotten kingdom.\n  * **1× Potion of Healing (Greater)**\n  * **A carved ivory medallion** worth 75 gp (could be a key to a deeper vault in the ruins!)."
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "prompt": {
+        "parts": [
+          {
+            "text": "Create a mysterious innkeeper NPC in a dark tavern with sample dialogue."
+          }
+        ],
+        "role": "user"
+      },
+      "responses": [
+        {
+          "response": {
+            "parts": [
+              {
+                "text": "Here is a detailed, tabletop-ready mysterious innkeeper NPC, along with sensory scene flavor text you can read aloud to your players.\n\n---\n\n### 📜 Read-Aloud Scene Description\n> *\"The air inside the tavern grows heavy with the scent of damp oak, stale ale, and faint copper. Shadows stretch unnaturally across the smoke-filled room, clung to by a cold draft that never quite leaves. The gentle, rhythmic scraping of a rag against a tarnished pewter mug breaks the low hum of muffled conversations, drawn from an innkeeper whose eyes seem to track your every step before you even cross the threshold.\"*\n\n---\n\n### 🎭 NPC Profile: Malakor \"The Silent\" Vane\n\n* **Role:** Innkeeper of *The Raven’s Rest*\n* **Appearance:** A lean man in his late 40s with silver-streaked dark hair, wearing a high-collared leather apron over worn wool clothes. A pale, faint scar runs along his neck, partially hidden by his collar.\n* **Mannerisms:** Speaks in a low, raspy whisper; rarely blinks; cleans the same glass repeatedly when observing patrons.\n* **Tone:** Mysterious, cautious, guarded.\n\n---\n\n### 💬 Sample Dialogue\n\n**When the party approaches the bar:**\n> *\"Keep your voice down... around here, even the shadows have ears. What brings outsiders to a place forgotten by the sun? Ale? A bed? Or are you looking for something... or someone... that doesn't want to be found?\"*\n\n**When asked about rumors or local secrets:**\n> *\"Information has a price in this town, friend. Some pay in gold, others in silence. Tell me what you're willing to part with, and perhaps I'll tell you which dark corners to avoid tonight.\"*\n\n**When leaning in to share a whisper:**\n> *\"If you're heading toward the old ruins west of town... don't stay past moonrise. I left something precious behind in those catacombs years ago—a heavy iron signet ring bearing a raven emblem. Bring it back to me untouched, and I'll ensure your names are spoken with respect in every shadow-market from here to the capital.\"*\n\n---\n\n### 🗝️ Secret Motivation & DM Notes\n* **Hidden Agenda:** Malakor was once an operative for a covert guild. The ring in the ruins is the key to a sealed vault containing damning evidence against a local noble lord. \n* **Roleplaying Tip:** Keep his eye contact steady and unblinking. Whenever a player makes a loud noise or asks a direct question, have him glance briefly toward the darkened corners of the room before answering."
+              }
+            ],
+            "role": "model"
+          }
+        }
+      ],
+      "eval_case_id": "npc_impersonation",
+      "agent_data": {
+        "agents": {
+          "root_agent": {
+            "agent_id": "root_agent",
+            "agent_type": "LlmAgent",
+            "description": "",
+            "instruction": "You are the ultimate D&D 5e RPG Dungeon Master Assistant. You help Dungeon Masters manage campaign notes, roll dice, look up 5e rules, generate random encounters, impersonate NPCs with dialogue, describe immersive scenes, and track party loot and campaign history. Always personalize responses based on remembered character facts, campaign beats, and player preferences.",
+            "tools": [
+              {
+                "function_declarations": [
+                  {
+                    "description": "Rolls D&D dice using cryptographically secure random numbers.\n\nArgs:\n    dice_expression: Expression like '1d20+5', '2d6+3', '1d100', '4d6'.\n\nReturns:\n    String with detailed rolls, modifiers, and final total sum.",
+                    "name": "roll_dice",
+                    "parameters": {
+                      "properties": {
+                        "dice_expression": {
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "dice_expression"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Retrieves authoritative D&D 5e rules information.\n\nArgs:\n    topic: The rule, condition, or mechanic to look up (e.g., 'advantage', 'grappled', 'concentration', 'cover', 'resting').\n\nReturns:\n    String summarizing the official 5e rules for the topic.",
+                    "name": "rules_lawyer_lookup",
+                    "parameters": {
+                      "properties": {
+                        "topic": {
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "topic"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Generates a random D&D combat encounter tailored to party level, difficulty, and environment.\n\nArgs:\n    party_level: Average level of the player characters (1 to 20).\n    difficulty: Desired difficulty ('Easy', 'Medium', 'Hard', 'Deadly').\n    environment: Terrain type (e.g., 'Forest', 'Dungeon', 'Mountain', 'Swamp', 'Underdark').\n\nReturns:\n    Formatted summary of the encounter including monsters, tactics, and environmental features.",
+                    "name": "generate_random_encounter",
+                    "parameters": {
+                      "properties": {
+                        "party_level": {
+                          "type": "INTEGER"
+                        },
+                        "difficulty": {
+                          "default": "Medium",
+                          "type": "STRING"
+                        },
+                        "environment": {
+                          "default": "Forest",
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "party_level"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Generates an NPC personality, dialogue snippet, and quest hook on the fly.\n\nArgs:\n    npc_role: The role or archetype of the NPC (e.g. 'Merchant', 'Guard', 'Blacksmith', 'Wizard', 'Innkeeper').\n    tone: The tone/vibe of the interaction (e.g. 'mysterious', 'friendly', 'suspicious', 'panicked').\n    location: Current setting (e.g. 'Tavern', 'Market Square', 'Castle Gate').\n\nReturns:\n    String detailing NPC profile, sample dialogue, and secret motivation.",
+                    "name": "npc_impersonator",
+                    "parameters": {
+                      "properties": {
+                        "npc_role": {
+                          "type": "STRING"
+                        },
+                        "tone": {
+                          "default": "mysterious",
+                          "type": "STRING"
+                        },
+                        "location": {
+                          "default": "Tavern",
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "npc_role"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Generates sensory flavor text for the Dungeon Master to describe scenes to players.\n\nArgs:\n    location_type: Type of location (e.g. 'Ancient Tomb', 'Dark Forest', 'Flooded Cavern').\n    atmosphere: Mood of the scene (e.g. 'tense', 'eerie', 'majestic', 'decaying').\n\nReturns:\n    Sensory description suitable for reading aloud during game sessions.",
+                    "name": "adventure_flavor_text",
+                    "parameters": {
+                      "properties": {
+                        "location_type": {
+                          "type": "STRING"
+                        },
+                        "atmosphere": {
+                          "default": "tense",
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "location_type"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              }
+            ],
+            "sub_agents": []
+          }
+        },
+        "turns": [
+          {
+            "turn_index": 0,
+            "turn_id": "turn_0",
+            "events": [
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "TuEGvahG",
+                        "args": {
+                          "location": "Dark Tavern",
+                          "tone": "mysterious",
+                          "npc_role": "Innkeeper"
+                        },
+                        "name": "npc_impersonator"
+                      }
+                    },
+                    {
+                      "function_call": {
+                        "id": "X3mM67OJ",
+                        "args": {
+                          "atmosphere": "eerie",
+                          "location_type": "Dark Tavern"
+                        },
+                        "name": "adventure_flavor_text"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "TuEGvahG",
+                        "name": "npc_impersonator",
+                        "response": {
+                          "result": "🎭 **NPC Profile: Innkeeper (Mysterious)**\n- **Location:** Dark Tavern\n- **Sample Dialogue:** \"Keep your voice down... around here, even the shadows have ears.\"\n- **Secret Motivation:** Seeking help to recover a lost family heirloom from the local ruins."
+                        }
+                      }
+                    },
+                    {
+                      "function_response": {
+                        "id": "X3mM67OJ",
+                        "name": "adventure_flavor_text",
+                        "response": {
+                          "result": "📜 **Scene Description (Dark Tavern - Eerie)**:\nThe air grows heavy with the scent of damp stone and ancient dust. Cold air clings to skin, and echoing drips from unseen stalactites break the oppressive silence of the Dark Tavern."
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              },
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "Here is a detailed, tabletop-ready mysterious innkeeper NPC, along with sensory scene flavor text you can read aloud to your players.\n\n---\n\n### 📜 Read-Aloud Scene Description\n> *\"The air inside the tavern grows heavy with the scent of damp oak, stale ale, and faint copper. Shadows stretch unnaturally across the smoke-filled room, clung to by a cold draft that never quite leaves. The gentle, rhythmic scraping of a rag against a tarnished pewter mug breaks the low hum of muffled conversations, drawn from an innkeeper whose eyes seem to track your every step before you even cross the threshold.\"*\n\n---\n\n### 🎭 NPC Profile: Malakor \"The Silent\" Vane\n\n* **Role:** Innkeeper of *The Raven’s Rest*\n* **Appearance:** A lean man in his late 40s with silver-streaked dark hair, wearing a high-collared leather apron over worn wool clothes. A pale, faint scar runs along his neck, partially hidden by his collar.\n* **Mannerisms:** Speaks in a low, raspy whisper; rarely blinks; cleans the same glass repeatedly when observing patrons.\n* **Tone:** Mysterious, cautious, guarded.\n\n---\n\n### 💬 Sample Dialogue\n\n**When the party approaches the bar:**\n> *\"Keep your voice down... around here, even the shadows have ears. What brings outsiders to a place forgotten by the sun? Ale? A bed? Or are you looking for something... or someone... that doesn't want to be found?\"*\n\n**When asked about rumors or local secrets:**\n> *\"Information has a price in this town, friend. Some pay in gold, others in silence. Tell me what you're willing to part with, and perhaps I'll tell you which dark corners to avoid tonight.\"*\n\n**When leaning in to share a whisper:**\n> *\"If you're heading toward the old ruins west of town... don't stay past moonrise. I left something precious behind in those catacombs years ago—a heavy iron signet ring bearing a raven emblem. Bring it back to me untouched, and I'll ensure your names are spoken with respect in every shadow-market from here to the capital.\"*\n\n---\n\n### 🗝️ Secret Motivation & DM Notes\n* **Hidden Agenda:** Malakor was once an operative for a covert guild. The ring in the ruins is the key to a sealed vault containing damning evidence against a local noble lord. \n* **Roleplaying Tip:** Keep his eye contact steady and unblinking. Whenever a player makes a loud noise or asks a direct question, have him glance briefly toward the darkened corners of the room before answering."
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "prompt": {
+        "parts": [
+          {
+            "text": "Give me sensory flavor text for entering a flooded dungeon room."
+          }
+        ],
+        "role": "user"
+      },
+      "responses": [
+        {
+          "response": {
+            "parts": [
+              {
+                "text": "Here is sensory flavor text you can read aloud to your players as they step into the flooded dungeon room:\n\n***\n\n### 📜 Read-Aloud Description\n\n> *\"The moment you breach the archway, a wave of cold, stagnant humidity hits your face, thick with the stench of rot, waterlogged timber, and centuries-old mud. Before you lies a sprawling chamber drowned in calf-deep, black water that reflects the flickering light of your torches like polished obsidian.*\n> \n> *The silence is heavy, broken only by the rhythmic, hollow drip of moisture from the slick, moss-covered ceiling. Beneath the murky surface, pale, slippery vegetation coils around submerged rubble, and gentle ripples fan out from your boots—a reminder that in this drowned chamber, every movement carries a sound.\"*\n\n***\n\n### 🎨 Sensory Breakdown for the DM\n\n* **Sight:** Black, mirror-like water reflecting light; slick green algae creeping up stone pillars; submerged debris masking hidden drop-offs or pressure plates.\n* **Sound:** Hollow, echoing water drips; heavy splashing that reverberates down dark corridors; sudden low bubbles rising from submerged silt.\n* **Smell & Touch:** A biting chill sticking to wet cloth; the oppressive weight of humid, sulfurous, damp air; slick mold underfoot.\n\n***\n\n### 💡 Interactive DM Hooks & Hazards\n* **Difficult Terrain:** The murky water hides broken masonry, deep sinkholes, or discarded weapons.\n* **Stealth Disadvantage:** Walking through the water without taking careful time requires a DC 12 Dexterity (Stealth) check to avoid loud splashing.\n* **Lurking Threats:** Perfect environment for aquatic or amphibious foes (*Gricks, Ghasts, Ochre Jellies, Constrictor Snakes, or Water Weirds*)."
+              }
+            ],
+            "role": "model"
+          }
+        }
+      ],
+      "eval_case_id": "scene_flavor_text",
+      "agent_data": {
+        "agents": {
+          "root_agent": {
+            "agent_id": "root_agent",
+            "agent_type": "LlmAgent",
+            "description": "",
+            "instruction": "You are the ultimate D&D 5e RPG Dungeon Master Assistant. You help Dungeon Masters manage campaign notes, roll dice, look up 5e rules, generate random encounters, impersonate NPCs with dialogue, describe immersive scenes, and track party loot and campaign history. Always personalize responses based on remembered character facts, campaign beats, and player preferences.",
+            "tools": [
+              {
+                "function_declarations": [
+                  {
+                    "description": "Rolls D&D dice using cryptographically secure random numbers.\n\nArgs:\n    dice_expression: Expression like '1d20+5', '2d6+3', '1d100', '4d6'.\n\nReturns:\n    String with detailed rolls, modifiers, and final total sum.",
+                    "name": "roll_dice",
+                    "parameters": {
+                      "properties": {
+                        "dice_expression": {
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "dice_expression"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Retrieves authoritative D&D 5e rules information.\n\nArgs:\n    topic: The rule, condition, or mechanic to look up (e.g., 'advantage', 'grappled', 'concentration', 'cover', 'resting').\n\nReturns:\n    String summarizing the official 5e rules for the topic.",
+                    "name": "rules_lawyer_lookup",
+                    "parameters": {
+                      "properties": {
+                        "topic": {
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "topic"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Generates a random D&D combat encounter tailored to party level, difficulty, and environment.\n\nArgs:\n    party_level: Average level of the player characters (1 to 20).\n    difficulty: Desired difficulty ('Easy', 'Medium', 'Hard', 'Deadly').\n    environment: Terrain type (e.g., 'Forest', 'Dungeon', 'Mountain', 'Swamp', 'Underdark').\n\nReturns:\n    Formatted summary of the encounter including monsters, tactics, and environmental features.",
+                    "name": "generate_random_encounter",
+                    "parameters": {
+                      "properties": {
+                        "party_level": {
+                          "type": "INTEGER"
+                        },
+                        "difficulty": {
+                          "default": "Medium",
+                          "type": "STRING"
+                        },
+                        "environment": {
+                          "default": "Forest",
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "party_level"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Generates an NPC personality, dialogue snippet, and quest hook on the fly.\n\nArgs:\n    npc_role: The role or archetype of the NPC (e.g. 'Merchant', 'Guard', 'Blacksmith', 'Wizard', 'Innkeeper').\n    tone: The tone/vibe of the interaction (e.g. 'mysterious', 'friendly', 'suspicious', 'panicked').\n    location: Current setting (e.g. 'Tavern', 'Market Square', 'Castle Gate').\n\nReturns:\n    String detailing NPC profile, sample dialogue, and secret motivation.",
+                    "name": "npc_impersonator",
+                    "parameters": {
+                      "properties": {
+                        "npc_role": {
+                          "type": "STRING"
+                        },
+                        "tone": {
+                          "default": "mysterious",
+                          "type": "STRING"
+                        },
+                        "location": {
+                          "default": "Tavern",
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "npc_role"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Generates sensory flavor text for the Dungeon Master to describe scenes to players.\n\nArgs:\n    location_type: Type of location (e.g. 'Ancient Tomb', 'Dark Forest', 'Flooded Cavern').\n    atmosphere: Mood of the scene (e.g. 'tense', 'eerie', 'majestic', 'decaying').\n\nReturns:\n    Sensory description suitable for reading aloud during game sessions.",
+                    "name": "adventure_flavor_text",
+                    "parameters": {
+                      "properties": {
+                        "location_type": {
+                          "type": "STRING"
+                        },
+                        "atmosphere": {
+                          "default": "tense",
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "location_type"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              }
+            ],
+            "sub_agents": []
+          }
+        },
+        "turns": [
+          {
+            "turn_index": 0,
+            "turn_id": "turn_0",
+            "events": [
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "I9fcxlZM",
+                        "args": {
+                          "location_type": "Flooded Dungeon Room",
+                          "atmosphere": "eerie"
+                        },
+                        "name": "adventure_flavor_text"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "I9fcxlZM",
+                        "name": "adventure_flavor_text",
+                        "response": {
+                          "result": "📜 **Scene Description (Flooded Dungeon Room - Eerie)**:\nThe air grows heavy with the scent of damp stone and ancient dust. Cold air clings to skin, and echoing drips from unseen stalactites break the oppressive silence of the Flooded Dungeon Room."
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              },
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "Here is sensory flavor text you can read aloud to your players as they step into the flooded dungeon room:\n\n***\n\n### 📜 Read-Aloud Description\n\n> *\"The moment you breach the archway, a wave of cold, stagnant humidity hits your face, thick with the stench of rot, waterlogged timber, and centuries-old mud. Before you lies a sprawling chamber drowned in calf-deep, black water that reflects the flickering light of your torches like polished obsidian.*\n> \n> *The silence is heavy, broken only by the rhythmic, hollow drip of moisture from the slick, moss-covered ceiling. Beneath the murky surface, pale, slippery vegetation coils around submerged rubble, and gentle ripples fan out from your boots—a reminder that in this drowned chamber, every movement carries a sound.\"*\n\n***\n\n### 🎨 Sensory Breakdown for the DM\n\n* **Sight:** Black, mirror-like water reflecting light; slick green algae creeping up stone pillars; submerged debris masking hidden drop-offs or pressure plates.\n* **Sound:** Hollow, echoing water drips; heavy splashing that reverberates down dark corridors; sudden low bubbles rising from submerged silt.\n* **Smell & Touch:** A biting chill sticking to wet cloth; the oppressive weight of humid, sulfurous, damp air; slick mold underfoot.\n\n***\n\n### 💡 Interactive DM Hooks & Hazards\n* **Difficult Terrain:** The murky water hides broken masonry, deep sinkholes, or discarded weapons.\n* **Stealth Disadvantage:** Walking through the water without taking careful time requires a DC 12 Dexterity (Stealth) check to avoid loud splashing.\n* **Lurking Threats:** Perfect environment for aquatic or amphibious foes (*Gricks, Ghasts, Ochre Jellies, Constrictor Snakes, or Water Weirds*)."
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

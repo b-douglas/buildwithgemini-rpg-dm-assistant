@@ -1,0 +1,434 @@
+{
+  "eval_cases": [
+    {
+      "prompt": {
+        "parts": [
+          {
+            "text": "Create a mysterious innkeeper NPC in a dark tavern with sample dialogue."
+          }
+        ],
+        "role": "user"
+      },
+      "responses": [
+        {
+          "response": {
+            "parts": [
+              {
+                "text": "Here is a complete, ready-to-run profile for your mysterious innkeeper and the eerie tavern setting.\n\n---\n\n### 🕯️ Scene Read-Aloud: The Tavern Setting\n> *\"The air grows heavy with the scent of cheap ale, wet leather, and ancient dust. Cold air clings to your skin, and the quiet, rhythmic drip of condensation from the low, smoke-stained rafters breaks the heavy silence of the tavern. Most tables sit in shadows; the few patrons huddled in dark cloaks avoid eye contact as you step toward the bar.\"*\n\n---\n\n### 👤 NPC Profile: **Corvus Vane**\n* **Role:** Innkeeper of *The Black Lantern*\n* **Appearance:** Tall and lean, with silver-streaked dark hair tied loosely back. One eye is cloudy white behind a brass monocle; the other is a sharp piercing gray. He polishes the same cracked pewter glass endlessly with a darkened rag.\n* **Mannerisms:** Speaks in a dry, rasping whisper; rarely blinks; moves with silent, practiced precision behind the bar.\n* **Secret Motivation:** He is guarding a hidden passage beneath the cellar and needs discreet adventurers to recover a lost family heirloom—an engraved onyx signet ring—from nearby ruins before his debtors or rival cultists find it.\n\n---\n\n### 🗣️ Sample Dialogue & Interactions\n\n#### **1. Greeting the Party**\n> *\"Keep your voice down... around here, even the shadows have ears. Tell me what brings strangers into a place forgotten by light—and speak quickly, before someone decides your business is theirs.\"*\n\n#### **2. Ordering Drinks / Lodging**\n> *\"A night’s rest? Five copper for a room upstairs. Don't touch the brass lock on the cellar door, and if you hear scratching behind the plaster... pretend you didn't.\"*\n\n#### **3. Dropping a Quest Hook**\n> *\"You look like the sort who don't flinch at bad odds. There’s an old tomb two miles north—the Sunken Vault. Something of mine was taken there decades ago. Bring me my family’s onyx ring, and I’ll ensure your stay here is free... and your names are kept off certain guard bounty posters.\"*\n\n#### **4. Reacting to Suspicion**\n> *\"Curiosity is an expensive habit in this town, stranger. Drink your ale, pay your coin, and leave the past buried where it belongs.\"*\n\n---\n\n### 🎒 DM Notes & Mechanics\n* **DC 13 Wisdom (Insight):** Players notice Corvus keeps checking a hidden latch under the counter near his knee—a concealed heavy crossbow.\n* **DC 15 Intelligence (History / Religion):** Recognizes the symbol carved into his pewter mugs as the seal of a defunct order of shadow guardians."
+              }
+            ],
+            "role": "model"
+          }
+        }
+      ],
+      "eval_case_id": "npc_impersonation",
+      "agent_data": {
+        "agents": {
+          "root_agent": {
+            "agent_id": "root_agent",
+            "agent_type": "LlmAgent",
+            "description": "",
+            "instruction": "You are the ultimate D&D 5e RPG Dungeon Master Assistant. You help Dungeon Masters manage campaign notes, roll dice, look up 5e rules, generate random encounters, impersonate NPCs with dialogue, describe immersive scenes, and track party loot and campaign history. Always personalize responses based on remembered character facts, campaign beats, and player preferences.",
+            "tools": [
+              {
+                "function_declarations": [
+                  {
+                    "description": "Rolls D&D dice using cryptographically secure random numbers.\n\nArgs:\n    dice_expression: Expression like '1d20+5', '2d6+3', '1d100', '4d6'.\n\nReturns:\n    String with detailed rolls, modifiers, and final total sum.",
+                    "name": "roll_dice",
+                    "parameters": {
+                      "properties": {
+                        "dice_expression": {
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "dice_expression"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Retrieves authoritative D&D 5e rules information.\n\nArgs:\n    topic: The rule, condition, or mechanic to look up (e.g., 'advantage', 'grappled', 'concentration', 'cover', 'resting').\n\nReturns:\n    String summarizing the official 5e rules for the topic.",
+                    "name": "rules_lawyer_lookup",
+                    "parameters": {
+                      "properties": {
+                        "topic": {
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "topic"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Generates a random D&D combat encounter tailored to party level, difficulty, and environment.\n\nArgs:\n    party_level: Average level of the player characters (1 to 20).\n    difficulty: Desired difficulty ('Easy', 'Medium', 'Hard', 'Deadly').\n    environment: Terrain type (e.g., 'Forest', 'Dungeon', 'Mountain', 'Swamp', 'Underdark').\n\nReturns:\n    Formatted summary of the encounter including monsters, tactics, and environmental features.",
+                    "name": "generate_random_encounter",
+                    "parameters": {
+                      "properties": {
+                        "party_level": {
+                          "type": "INTEGER"
+                        },
+                        "difficulty": {
+                          "default": "Medium",
+                          "type": "STRING"
+                        },
+                        "environment": {
+                          "default": "Forest",
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "party_level"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Generates an NPC personality, dialogue snippet, and quest hook on the fly.\n\nArgs:\n    npc_role: The role or archetype of the NPC (e.g. 'Merchant', 'Guard', 'Blacksmith', 'Wizard', 'Innkeeper').\n    tone: The tone/vibe of the interaction (e.g. 'mysterious', 'friendly', 'suspicious', 'panicked').\n    location: Current setting (e.g. 'Tavern', 'Market Square', 'Castle Gate').\n\nReturns:\n    String detailing NPC profile, sample dialogue, and secret motivation.",
+                    "name": "npc_impersonator",
+                    "parameters": {
+                      "properties": {
+                        "npc_role": {
+                          "type": "STRING"
+                        },
+                        "tone": {
+                          "default": "mysterious",
+                          "type": "STRING"
+                        },
+                        "location": {
+                          "default": "Tavern",
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "npc_role"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Generates sensory flavor text for the Dungeon Master to describe scenes to players.\n\nArgs:\n    location_type: Type of location (e.g. 'Ancient Tomb', 'Dark Forest', 'Flooded Cavern').\n    atmosphere: Mood of the scene (e.g. 'tense', 'eerie', 'majestic', 'decaying').\n\nReturns:\n    Sensory description suitable for reading aloud during game sessions.",
+                    "name": "adventure_flavor_text",
+                    "parameters": {
+                      "properties": {
+                        "location_type": {
+                          "type": "STRING"
+                        },
+                        "atmosphere": {
+                          "default": "tense",
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "location_type"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              }
+            ],
+            "sub_agents": []
+          }
+        },
+        "turns": [
+          {
+            "turn_index": 0,
+            "turn_id": "turn_0",
+            "events": [
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "8uqZDreg",
+                        "args": {
+                          "location": "Dark Tavern",
+                          "tone": "mysterious",
+                          "npc_role": "Innkeeper"
+                        },
+                        "name": "npc_impersonator"
+                      }
+                    },
+                    {
+                      "function_call": {
+                        "id": "CoJidQde",
+                        "args": {
+                          "location_type": "Dark Tavern",
+                          "atmosphere": "eerie"
+                        },
+                        "name": "adventure_flavor_text"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "8uqZDreg",
+                        "name": "npc_impersonator",
+                        "response": {
+                          "result": "🎭 **NPC Profile: Innkeeper (Mysterious)**\n- **Location:** Dark Tavern\n- **Sample Dialogue:** \"Keep your voice down... around here, even the shadows have ears.\"\n- **Secret Motivation:** Seeking help to recover a lost family heirloom from the local ruins."
+                        }
+                      }
+                    },
+                    {
+                      "function_response": {
+                        "id": "CoJidQde",
+                        "name": "adventure_flavor_text",
+                        "response": {
+                          "result": "📜 **Scene Description (Dark Tavern - Eerie)**:\nThe air grows heavy with the scent of damp stone and ancient dust. Cold air clings to skin, and echoing drips from unseen stalactites break the oppressive silence of the Dark Tavern."
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              },
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "Here is a complete, ready-to-run profile for your mysterious innkeeper and the eerie tavern setting.\n\n---\n\n### 🕯️ Scene Read-Aloud: The Tavern Setting\n> *\"The air grows heavy with the scent of cheap ale, wet leather, and ancient dust. Cold air clings to your skin, and the quiet, rhythmic drip of condensation from the low, smoke-stained rafters breaks the heavy silence of the tavern. Most tables sit in shadows; the few patrons huddled in dark cloaks avoid eye contact as you step toward the bar.\"*\n\n---\n\n### 👤 NPC Profile: **Corvus Vane**\n* **Role:** Innkeeper of *The Black Lantern*\n* **Appearance:** Tall and lean, with silver-streaked dark hair tied loosely back. One eye is cloudy white behind a brass monocle; the other is a sharp piercing gray. He polishes the same cracked pewter glass endlessly with a darkened rag.\n* **Mannerisms:** Speaks in a dry, rasping whisper; rarely blinks; moves with silent, practiced precision behind the bar.\n* **Secret Motivation:** He is guarding a hidden passage beneath the cellar and needs discreet adventurers to recover a lost family heirloom—an engraved onyx signet ring—from nearby ruins before his debtors or rival cultists find it.\n\n---\n\n### 🗣️ Sample Dialogue & Interactions\n\n#### **1. Greeting the Party**\n> *\"Keep your voice down... around here, even the shadows have ears. Tell me what brings strangers into a place forgotten by light—and speak quickly, before someone decides your business is theirs.\"*\n\n#### **2. Ordering Drinks / Lodging**\n> *\"A night’s rest? Five copper for a room upstairs. Don't touch the brass lock on the cellar door, and if you hear scratching behind the plaster... pretend you didn't.\"*\n\n#### **3. Dropping a Quest Hook**\n> *\"You look like the sort who don't flinch at bad odds. There’s an old tomb two miles north—the Sunken Vault. Something of mine was taken there decades ago. Bring me my family’s onyx ring, and I’ll ensure your stay here is free... and your names are kept off certain guard bounty posters.\"*\n\n#### **4. Reacting to Suspicion**\n> *\"Curiosity is an expensive habit in this town, stranger. Drink your ale, pay your coin, and leave the past buried where it belongs.\"*\n\n---\n\n### 🎒 DM Notes & Mechanics\n* **DC 13 Wisdom (Insight):** Players notice Corvus keeps checking a hidden latch under the counter near his knee—a concealed heavy crossbow.\n* **DC 15 Intelligence (History / Religion):** Recognizes the symbol carved into his pewter mugs as the seal of a defunct order of shadow guardians."
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "prompt": {
+        "parts": [
+          {
+            "text": "Give me sensory flavor text for entering a flooded dungeon room."
+          }
+        ],
+        "role": "user"
+      },
+      "responses": [
+        {
+          "response": {
+            "parts": [
+              {
+                "text": "Here is read-aloud flavor text for your party entering a flooded dungeon room:\n\n***\n\n> **\"As you step through the archway, the air thickens with the stagnant stench of rot, mold, and wet iron. Black, slick water laps against the rusted heels of your boots, dark as spilled ink and entirely still save for the slow ripple of your footsteps.** \n>\n> **The chill in the room clings to your skin like a damp shroud. Farther out, half-submerged stone pillars rise like forgotten tomb monuments, while distant, echoing water drips—*plip... plip... plip*—measure the quiet dread of the dark. Beneath the murk, something unseen shifts, breaking the water's glassy surface with a faint, uneasy swirl...\"**\n\n***\n\n### Sensory Breakdown for Quick DM Reference:\n* **Sight:** Ink-black, mirror-still water; half-submerged ruined pillars; ripples reacting to torchlight/movement.\n* **Sound:** Hollow echoing drips (*plip... plip*); subtle sloshing; muffled, aquatic echoes.\n* **Smell:** Stagnant water, decaying vegetation/mold, wet iron, thick moisture.\n* **Touch/Feeling:** Biting chill, wet mud underfoot, heavy/damp air clinging to clothing and skin."
+              }
+            ],
+            "role": "model"
+          }
+        }
+      ],
+      "eval_case_id": "scene_flavor_text",
+      "agent_data": {
+        "agents": {
+          "root_agent": {
+            "agent_id": "root_agent",
+            "agent_type": "LlmAgent",
+            "description": "",
+            "instruction": "You are the ultimate D&D 5e RPG Dungeon Master Assistant. You help Dungeon Masters manage campaign notes, roll dice, look up 5e rules, generate random encounters, impersonate NPCs with dialogue, describe immersive scenes, and track party loot and campaign history. Always personalize responses based on remembered character facts, campaign beats, and player preferences.",
+            "tools": [
+              {
+                "function_declarations": [
+                  {
+                    "description": "Rolls D&D dice using cryptographically secure random numbers.\n\nArgs:\n    dice_expression: Expression like '1d20+5', '2d6+3', '1d100', '4d6'.\n\nReturns:\n    String with detailed rolls, modifiers, and final total sum.",
+                    "name": "roll_dice",
+                    "parameters": {
+                      "properties": {
+                        "dice_expression": {
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "dice_expression"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Retrieves authoritative D&D 5e rules information.\n\nArgs:\n    topic: The rule, condition, or mechanic to look up (e.g., 'advantage', 'grappled', 'concentration', 'cover', 'resting').\n\nReturns:\n    String summarizing the official 5e rules for the topic.",
+                    "name": "rules_lawyer_lookup",
+                    "parameters": {
+                      "properties": {
+                        "topic": {
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "topic"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Generates a random D&D combat encounter tailored to party level, difficulty, and environment.\n\nArgs:\n    party_level: Average level of the player characters (1 to 20).\n    difficulty: Desired difficulty ('Easy', 'Medium', 'Hard', 'Deadly').\n    environment: Terrain type (e.g., 'Forest', 'Dungeon', 'Mountain', 'Swamp', 'Underdark').\n\nReturns:\n    Formatted summary of the encounter including monsters, tactics, and environmental features.",
+                    "name": "generate_random_encounter",
+                    "parameters": {
+                      "properties": {
+                        "party_level": {
+                          "type": "INTEGER"
+                        },
+                        "difficulty": {
+                          "default": "Medium",
+                          "type": "STRING"
+                        },
+                        "environment": {
+                          "default": "Forest",
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "party_level"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Generates an NPC personality, dialogue snippet, and quest hook on the fly.\n\nArgs:\n    npc_role: The role or archetype of the NPC (e.g. 'Merchant', 'Guard', 'Blacksmith', 'Wizard', 'Innkeeper').\n    tone: The tone/vibe of the interaction (e.g. 'mysterious', 'friendly', 'suspicious', 'panicked').\n    location: Current setting (e.g. 'Tavern', 'Market Square', 'Castle Gate').\n\nReturns:\n    String detailing NPC profile, sample dialogue, and secret motivation.",
+                    "name": "npc_impersonator",
+                    "parameters": {
+                      "properties": {
+                        "npc_role": {
+                          "type": "STRING"
+                        },
+                        "tone": {
+                          "default": "mysterious",
+                          "type": "STRING"
+                        },
+                        "location": {
+                          "default": "Tavern",
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "npc_role"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              },
+              {
+                "function_declarations": [
+                  {
+                    "description": "Generates sensory flavor text for the Dungeon Master to describe scenes to players.\n\nArgs:\n    location_type: Type of location (e.g. 'Ancient Tomb', 'Dark Forest', 'Flooded Cavern').\n    atmosphere: Mood of the scene (e.g. 'tense', 'eerie', 'majestic', 'decaying').\n\nReturns:\n    Sensory description suitable for reading aloud during game sessions.",
+                    "name": "adventure_flavor_text",
+                    "parameters": {
+                      "properties": {
+                        "location_type": {
+                          "type": "STRING"
+                        },
+                        "atmosphere": {
+                          "default": "tense",
+                          "type": "STRING"
+                        }
+                      },
+                      "required": [
+                        "location_type"
+                      ],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              }
+            ],
+            "sub_agents": []
+          }
+        },
+        "turns": [
+          {
+            "turn_index": 0,
+            "turn_id": "turn_0",
+            "events": [
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "rFBYWeXK",
+                        "args": {
+                          "atmosphere": "eerie",
+                          "location_type": "Flooded Dungeon Room"
+                        },
+                        "name": "adventure_flavor_text"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "rFBYWeXK",
+                        "name": "adventure_flavor_text",
+                        "response": {
+                          "result": "📜 **Scene Description (Flooded Dungeon Room - Eerie)**:\nThe air grows heavy with the scent of damp stone and ancient dust. Cold air clings to skin, and echoing drips from unseen stalactites break the oppressive silence of the Flooded Dungeon Room."
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              },
+              {
+                "author": "root_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "Here is read-aloud flavor text for your party entering a flooded dungeon room:\n\n***\n\n> **\"As you step through the archway, the air thickens with the stagnant stench of rot, mold, and wet iron. Black, slick water laps against the rusted heels of your boots, dark as spilled ink and entirely still save for the slow ripple of your footsteps.** \n>\n> **The chill in the room clings to your skin like a damp shroud. Farther out, half-submerged stone pillars rise like forgotten tomb monuments, while distant, echoing water drips—*plip... plip... plip*—measure the quiet dread of the dark. Beneath the murk, something unseen shifts, breaking the water's glassy surface with a faint, uneasy swirl...\"**\n\n***\n\n### Sensory Breakdown for Quick DM Reference:\n* **Sight:** Ink-black, mirror-still water; half-submerged ruined pillars; ripples reacting to torchlight/movement.\n* **Sound:** Hollow echoing drips (*plip... plip*); subtle sloshing; muffled, aquatic echoes.\n* **Smell:** Stagnant water, decaying vegetation/mold, wet iron, thick moisture.\n* **Touch/Feeling:** Biting chill, wet mud underfoot, heavy/damp air clinging to clothing and skin."
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

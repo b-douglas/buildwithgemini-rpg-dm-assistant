@@ -1,0 +1,39 @@
+{
+  "eval_cases": [
+    {
+      "eval_case_id": "dice_roll",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "Roll a 1d20+5 stealth check for Elion."}]
+      }
+    },
+    {
+      "eval_case_id": "rules_lookup",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "What are the rules for Advantage and Disadvantage in D&D 5e?"}]
+      }
+    },
+    {
+      "eval_case_id": "random_encounter",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "Generate a medium difficulty encounter for a Level 5 party in an Ancient Ruins."}]
+      }
+    },
+    {
+      "eval_case_id": "npc_impersonation",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "Create a mysterious innkeeper NPC in a dark tavern with sample dialogue."}]
+      }
+    },
+    {
+      "eval_case_id": "scene_flavor_text",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "Give me sensory flavor text for entering a flooded dungeon room."}]
+      }
+    }
+  ]
+}
