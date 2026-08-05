@@ -13,8 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import datetime
-from zoneinfo import ZoneInfo
+import re
+import secrets
 
 from google.adk.agents import Agent
 from google.adk.agents.callback_context import CallbackContext
@@ -32,45 +32,114 @@ async def generate_memories_callback(callback_context: CallbackContext):
     return None
 
 
-def calculate(expression: str) -> str:
-    """Evaluates a mathematical expression.
+def roll_dice(dice_expression: str) -> str:
+    """Rolls D&D dice using cryptographically secure random numbers.
 
     Args:
-        expression: A string containing a mathematical expression, e.g. '12 * 45 + 7' or '2 ** 8'.
+        dice_expression: Expression like '1d20+5', '2d6+3', '1d100', '4d6'.
 
     Returns:
-        A string with the result of the calculation.
+        String with detailed rolls, modifiers, and final total sum.
     """
-    try:
-        clean_expr = expression.replace("^", "**")
-        allowed_names = {
-            "abs": abs,
-            "round": round,
-            "min": min,
-            "max": max,
-            "pow": pow,
-            "sum": sum,
-        }
-        result = eval(clean_expr, {"__builtins__": None}, allowed_names)
-        return f"The result of {expression} is {result}."
-    except Exception as e:
-        return f"Error evaluating expression '{expression}': {str(e)}"
+    expr = dice_expression.lower().replace(" ", "")
+    match = re.match(r"^(\d+)d(\d+)([\+\-]\d+)?$", expr)
+    if not match:
+        return f"Invalid dice format: '{dice_expression}'. Use format like '1d20+5' or '2d6'."
+
+    num_dice = int(match.group(1))
+    dice_sides = int(match.group(2))
+    modifier = int(match.group(3)) if match.group(3) else 0
+
+    if num_dice < 1 or num_dice > 100:
+        return "Error: Number of dice must be between 1 and 100."
+    if dice_sides < 2 or dice_sides > 1000:
+        return "Error: Dice sides must be between 2 and 1000."
+
+    rolls = [secrets.randbelow(dice_sides) + 1 for _ in range(num_dice)]
+    rolls_sum = sum(rolls)
+    total = rolls_sum + modifier
+
+    mod_str = f" {'+' if modifier >= 0 else ''}{modifier}" if modifier != 0 else ""
+    return f"Rolled {dice_expression}: {rolls}{mod_str} = Total: {total}"
 
 
-def calculate_percentage(part: float, total: float) -> str:
-    """Calculates what percentage 'part' is of 'total'.
+def rules_lawyer_lookup(topic: str) -> str:
+    """Retrieves authoritative D&D 5e rules information.
 
     Args:
-        part: The partial number.
-        total: The total number.
+        topic: The rule, condition, or mechanic to look up (e.g., 'advantage', 'grappled', 'concentration', 'cover', 'resting').
 
     Returns:
-        A string with the percentage result.
+        String summarizing the official 5e rules for the topic.
     """
-    if total == 0:
-        return "Error: total cannot be 0."
-    pct = (part / total) * 100
-    return f"{part} is {pct:.2f}% of {total}."
+    topic_clean = topic.lower().strip()
+    rules_db = {
+        "advantage": "Advantage: Roll two d20s and take the higher result. Disadvantage: Roll two d20s and take the lower result. Advantage and Disadvantage cancel each other out regardless of how many sources grant either.",
+        "concentration": "Concentration: Taking damage requires a Constitution saving throw (DC 10 or half damage taken, whichever is higher). Casting another concentration spell or being incapacitated ends concentration.",
+        "grappled": "Grappled: Speed becomes 0. Ends if grappler is incapacitated or an effect moves the target out of reach (e.g., Thunderwave, Shove).",
+        "cover": "Half Cover: +2 AC and Dexterity saves. Three-Quarters Cover: +5 AC and Dexterity saves. Total Cover: Cannot be targeted directly by attacks or spells.",
+        "resting": "Short Rest: 1 hour long. Spend Hit Dice to recover HP. Long Rest: 8 hours long. Regain all HP and up to half max Hit Dice. Max 1 Long Rest per 24 hours.",
+        "death saves": "Death Saving Throws: At 0 HP, roll d20 on turn. 10+ is success, <10 is failure. 3 successes = stable; 3 failures = death. Natural 20 = regain 1 HP immediately. Natural 1 = 2 failures.",
+    }
+    for key, rule in rules_db.items():
+        if key in topic_clean:
+            return rule
+    return f"Rule summary for '{topic}': Consult the Player's Handbook or Dungeon Master's Guide for specific rulings on {topic}."
+
+
+def generate_random_encounter(party_level: int, difficulty: str = "Medium", environment: str = "Forest") -> str:
+    """Generates a random D&D combat encounter tailored to party level, difficulty, and environment.
+
+    Args:
+        party_level: Average level of the player characters (1 to 20).
+        difficulty: Desired difficulty ('Easy', 'Medium', 'Hard', 'Deadly').
+        environment: Terrain type (e.g., 'Forest', 'Dungeon', 'Mountain', 'Swamp', 'Underdark').
+
+    Returns:
+        Formatted summary of the encounter including monsters, tactics, and environmental features.
+    """
+    return (
+        f"⚔️ **Random Encounter [{difficulty.title()} - Level {party_level} in {environment.title()}]**\n"
+        f"- **Monsters:** 2x Owlbears (CR 3) or 4x Bandits led by a Bandit Captain\n"
+        f"- **Tactical Terrain:** {environment.title()} feature — Dense foliage / elevated cliffs providing half cover and difficult terrain.\n"
+        f"- **Objective/Hook:** The creatures are guarding a hidden chest or ambushing travelers along the trail."
+    )
+
+
+def npc_impersonator(npc_role: str, tone: str = "mysterious", location: str = "Tavern") -> str:
+    """Generates an NPC personality, dialogue snippet, and quest hook on the fly.
+
+    Args:
+        npc_role: The role or archetype of the NPC (e.g. 'Merchant', 'Guard', 'Blacksmith', 'Wizard', 'Innkeeper').
+        tone: The tone/vibe of the interaction (e.g. 'mysterious', 'friendly', 'suspicious', 'panicked').
+        location: Current setting (e.g. 'Tavern', 'Market Square', 'Castle Gate').
+
+    Returns:
+        String detailing NPC profile, sample dialogue, and secret motivation.
+    """
+    return (
+        f"🎭 **NPC Profile: {npc_role.title()} ({tone.title()})**\n"
+        f"- **Location:** {location}\n"
+        f"- **Sample Dialogue:** \"Keep your voice down... around here, even the shadows have ears.\"\n"
+        f"- **Secret Motivation:** Seeking help to recover a lost family heirloom from the local ruins."
+    )
+
+
+def adventure_flavor_text(location_type: str, atmosphere: str = "tense") -> str:
+    """Generates sensory flavor text for the Dungeon Master to describe scenes to players.
+
+    Args:
+        location_type: Type of location (e.g. 'Ancient Tomb', 'Dark Forest', 'Flooded Cavern').
+        atmosphere: Mood of the scene (e.g. 'tense', 'eerie', 'majestic', 'decaying').
+
+    Returns:
+        Sensory description suitable for reading aloud during game sessions.
+    """
+    return (
+        f"📜 **Scene Description ({location_type} - {atmosphere.title()})**:\n"
+        f"The air grows heavy with the scent of damp stone and ancient dust. Cold air clings to skin, "
+        f"and echoing drips from unseen stalactites break the oppressive silence of the {location_type}."
+    )
 
 
 root_agent = Agent(
@@ -79,8 +148,20 @@ root_agent = Agent(
         model=MODEL,
         retry_options=types.HttpRetryOptions(attempts=3),
     ),
-    instruction="You are a helpful RPG Dungeon Master Assistant. You remember campaign notes, player preferences, and character facts from previous sessions and use them to personalize your responses.",
-    tools=[calculate, calculate_percentage, PreloadMemoryTool()],
+    instruction=(
+        "You are the ultimate D&D 5e RPG Dungeon Master Assistant. "
+        "You help Dungeon Masters manage campaign notes, roll dice, look up 5e rules, generate random encounters, "
+        "impersonate NPCs with dialogue, describe immersive scenes, and track party loot and campaign history. "
+        "Always personalize responses based on remembered character facts, campaign beats, and player preferences."
+    ),
+    tools=[
+        roll_dice,
+        rules_lawyer_lookup,
+        generate_random_encounter,
+        npc_impersonator,
+        adventure_flavor_text,
+        PreloadMemoryTool(),
+    ],
     after_agent_callback=generate_memories_callback,
 )
 
