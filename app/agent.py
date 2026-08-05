@@ -14,8 +14,10 @@
 # limitations under the License.
 
 import datetime
+import json
 import re
 import secrets
+import urllib.request
 from google.cloud import firestore
 
 from google.adk.agents import Agent
@@ -37,6 +39,49 @@ async def generate_memories_callback(callback_context: CallbackContext):
         # Memory service is absent during standalone local/eval runs
         pass
     return None
+
+
+def fetch_5e_monster_statblock(monster_name: str) -> str:
+    """Fetches real official D&D 5e monster stat blocks from the OpenSRD API.
+
+    Args:
+        monster_name: Name of the monster (e.g. 'owlbear', 'goblin', 'beholder', 'red-dragon').
+
+    Returns:
+        Formatted summary of the monster's AC, HP, speed, stats, and key actions.
+    """
+    slug = monster_name.lower().strip().replace(" ", "-")
+    url = f"https://www.dnd5eapi.co/api/monsters/{slug}"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "ADK-DM-Agent/1.0"})
+        with urllib.request.urlopen(req, timeout=5) as response:
+            if response.status != 200:
+                return f"Monster '{monster_name}' not found in 5e OpenSRD database."
+            data = json.loads(response.read().decode("utf-8"))
+
+        name = data.get("name", monster_name.title())
+        size = data.get("size", "Medium")
+        m_type = data.get("type", "monster")
+        alignment = data.get("alignment", "unaligned")
+        ac_val = data.get("armor_class", [{}])[0].get("value", "N/A") if data.get("armor_class") else "N/A"
+        hp_val = data.get("hit_points", "N/A")
+        hit_dice = data.get("hit_points_roll", "")
+        speed = ", ".join(f"{k}: {v}" for k, v in data.get("speed", {}).items())
+        cr = data.get("challenge_rating", "N/A")
+
+        actions_list = []
+        for act in data.get("actions", [])[:3]:
+            actions_list.append(f"  - **{act.get('name')}:** {act.get('desc')}")
+        actions_str = "\n".join(actions_list) if actions_list else "  - Standard melee attack"
+
+        return (
+            f"🐉 **{name}** ({size} {m_type}, {alignment}) | **CR:** {cr}\n"
+            f"- **Armor Class:** {ac_val} | **Hit Points:** {hp_val} ({hit_dice})\n"
+            f"- **Speed:** {speed}\n"
+            f"- **Key Actions:**\n{actions_str}"
+        )
+    except Exception as e:
+        return f"Error fetching monster '{monster_name}' from 5e OpenSRD: {str(e)}"
 
 
 def get_story_beats(act: str = "") -> str:
@@ -181,7 +226,7 @@ def generate_random_encounter(party_level: int, difficulty: str = "Medium", envi
     Args:
         party_level: Average level of the player characters (1 to 20).
         difficulty: Desired difficulty ('Easy', 'Medium', 'Hard', 'Deadly').
-        environment: Terrain type (e.g., 'Forest', 'Dungeon', 'Mountain', 'Swamp', 'Underdark').
+        environment: Terrain type (e.g. 'Forest', 'Dungeon', 'Mountain', 'Swamp', 'Underdark').
 
     Returns:
         Formatted summary of the encounter including monsters, tactics, and environmental features.
@@ -209,7 +254,7 @@ def npc_impersonator(npc_role: str, tone: str = "mysterious", location: str = "T
         f"🎭 **NPC Profile: {npc_role.title()} ({tone.title()})**\n"
         f"- **Location:** {location}\n"
         f"- **Sample Dialogue:** \"Keep your voice down... around here, even the shadows have ears.\"\n"
-        f"- **Secret Motivation:** Seeking help to recover a lost family heirloom from the local ruins."
+        f"- **Secret Motivation:** Seeking help to recover a family heirloom from the local ruins."
     )
 
 
@@ -258,14 +303,15 @@ root_agent = Agent(
     ),
     instruction=(
         "You are the ultimate D&D 5e RPG Dungeon Master Assistant. "
-        "You help Dungeon Masters manage campaign notes, roll dice, look up 5e rules, generate random encounters, "
-        "impersonate NPCs with dialogue, describe immersive scenes, manage prepped campaign Story Beats in Firestore, "
+        "You help Dungeon Masters manage campaign notes, roll dice, look up 5e rules, fetch official 5e monster stat blocks from OpenSRD, "
+        "generate random encounters, impersonate NPCs with dialogue, describe immersive scenes, manage prepped campaign Story Beats in Firestore, "
         "and retrieve public Cloud Storage image asset URLs for character portraits, encounters, locations, and items. "
         "Always personalize responses based on remembered character facts, campaign beats, and player preferences."
     ),
     tools=[
         roll_dice,
         rules_lawyer_lookup,
+        fetch_5e_monster_statblock,
         generate_random_encounter,
         npc_impersonator,
         adventure_flavor_text,
