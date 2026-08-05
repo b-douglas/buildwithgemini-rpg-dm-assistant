@@ -28,7 +28,11 @@ MODEL = "gemini-3.6-flash"
 
 
 async def generate_memories_callback(callback_context: CallbackContext):
-    await callback_context.add_session_to_memory()
+    try:
+        await callback_context.add_session_to_memory()
+    except ValueError:
+        # Memory service is absent during standalone local/eval runs
+        pass
     return None
 
 
