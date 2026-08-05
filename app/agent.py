@@ -13,8 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import datetime
 import re
 import secrets
+from google.cloud import firestore
 
 from google.adk.agents import Agent
 from google.adk.agents.callback_context import CallbackContext
@@ -25,6 +27,7 @@ from google.genai import types
 
 
 MODEL = "gemini-3.6-flash"
+FIRESTORE_PROJECT = "qwiklabs-gcp-04-b94d5857ae5f"
 
 
 async def generate_memories_callback(callback_context: CallbackContext):
@@ -34,6 +37,87 @@ async def generate_memories_callback(callback_context: CallbackContext):
         # Memory service is absent during standalone local/eval runs
         pass
     return None
+
+
+def get_story_beats(act: str = "") -> str:
+    """Retrieves prepped campaign story beats from the Firestore database.
+
+    Args:
+        act: Optional filter by campaign act (e.g. 'Act I', 'Act II'). Leave empty to retrieve all beats.
+
+    Returns:
+        Formatted summary of story beats including title, act, summary, encounter type, and status.
+    """
+    try:
+        db = firestore.Client(project=FIRESTORE_PROJECT)
+        collection_ref = db.collection("story_beats")
+        docs = list(collection_ref.stream())
+
+        beats = []
+        for doc in docs:
+            data = doc.to_dict()
+            if act and act.lower() not in data.get("act", "").lower():
+                continue
+            beats.append(data)
+
+        if not beats:
+            filter_msg = f" for act '{act}'" if act else ""
+            return f"No story beats found in Firestore{filter_msg}."
+
+        result = ["📖 **Campaign Story Beats (Firestore):**\n"]
+        for b in beats:
+            result.append(
+                f"- **{b.get('title', 'Untitled')}** [{b.get('beat_id', '')}]\n"
+                f"  - **Act:** {b.get('act', 'N/A')} | **Type:** {b.get('encounter_type', 'N/A')} | **Rec. Level:** {b.get('recommended_level', 5)} | **Status:** {b.get('status', 'prepped')}\n"
+                f"  - **Summary:** {b.get('summary', '')}\n"
+            )
+        return "\n".join(result)
+    except Exception as e:
+        return f"Error reading story beats from Firestore: {str(e)}"
+
+
+def save_story_beat(
+    title: str,
+    summary: str,
+    act: str = "Act I",
+    encounter_type: str = "Combat",
+    recommended_level: int = 5,
+    status: str = "prepped",
+) -> str:
+    """Saves a new campaign story beat or encounter prep into the Firestore database.
+
+    Args:
+        title: Title of the story beat or encounter.
+        summary: Summary of the beat, narrative hook, and key monsters/NPCs.
+        act: Campaign act name (e.g. 'Act I: Shadows over Oakhaven').
+        encounter_type: Type of encounter ('Combat', 'Social', 'Exploration', 'Puzzle').
+        recommended_level: Recommended average party level (1 to 20).
+        status: Preparation status ('prepped', 'planned', 'completed').
+
+    Returns:
+        Confirmation message with the generated Firestore Beat ID.
+    """
+    try:
+        db = firestore.Client(project=FIRESTORE_PROJECT)
+        collection_ref = db.collection("story_beats")
+
+        doc_count = len(list(collection_ref.stream()))
+        beat_id = f"beat_{doc_count + 1:03d}"
+
+        data = {
+            "beat_id": beat_id,
+            "title": title,
+            "act": act,
+            "summary": summary,
+            "encounter_type": encounter_type,
+            "recommended_level": recommended_level,
+            "status": status,
+            "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        }
+        collection_ref.document(beat_id).set(data)
+        return f"✅ Saved Story Beat '{title}' (ID: {beat_id}) to Firestore collection 'story_beats'."
+    except Exception as e:
+        return f"Error saving story beat to Firestore: {str(e)}"
 
 
 def roll_dice(dice_expression: str) -> str:
@@ -155,7 +239,7 @@ root_agent = Agent(
     instruction=(
         "You are the ultimate D&D 5e RPG Dungeon Master Assistant. "
         "You help Dungeon Masters manage campaign notes, roll dice, look up 5e rules, generate random encounters, "
-        "impersonate NPCs with dialogue, describe immersive scenes, and track party loot and campaign history. "
+        "impersonate NPCs with dialogue, describe immersive scenes, and manage prepped campaign Story Beats in Firestore. "
         "Always personalize responses based on remembered character facts, campaign beats, and player preferences."
     ),
     tools=[
@@ -164,6 +248,8 @@ root_agent = Agent(
         generate_random_encounter,
         npc_impersonator,
         adventure_flavor_text,
+        get_story_beats,
+        save_story_beat,
         PreloadMemoryTool(),
     ],
     after_agent_callback=generate_memories_callback,
