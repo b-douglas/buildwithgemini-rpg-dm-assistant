@@ -230,6 +230,26 @@ def adventure_flavor_text(location_type: str, atmosphere: str = "tense") -> str:
     )
 
 
+def get_image_asset_url(category: str = "locations", asset_name: str = "tomb_concept") -> str:
+    """Generates the organized Cloud Storage public URL for an image asset.
+
+    Args:
+        category: Image category ('portraits', 'encounters', 'locations', 'items').
+        asset_name: Name or description of the image asset (e.g. 'dragon_encounter', 'baron_vane_portrait').
+
+    Returns:
+        Public HTTPS URL for embedding the image asset in web pages or cards.
+    """
+    category_clean = category.lower().strip()
+    valid_categories = {"portraits", "encounters", "locations", "items"}
+    if category_clean not in valid_categories:
+        category_clean = "locations"
+
+    asset_slug = re.sub(r"[^a-z0-9_]", "_", asset_name.lower().strip())
+    url = f"https://storage.googleapis.com/rpg-dm-images-qwiklabs-gcp-04-b94d5857ae5f/images/{category_clean}/{asset_slug}.png"
+    return f"📷 **Asset URL ({category_clean.title()}):** {url}"
+
+
 root_agent = Agent(
     name="root_agent",
     model=Gemini(
@@ -239,7 +259,8 @@ root_agent = Agent(
     instruction=(
         "You are the ultimate D&D 5e RPG Dungeon Master Assistant. "
         "You help Dungeon Masters manage campaign notes, roll dice, look up 5e rules, generate random encounters, "
-        "impersonate NPCs with dialogue, describe immersive scenes, and manage prepped campaign Story Beats in Firestore. "
+        "impersonate NPCs with dialogue, describe immersive scenes, manage prepped campaign Story Beats in Firestore, "
+        "and retrieve public Cloud Storage image asset URLs for character portraits, encounters, locations, and items. "
         "Always personalize responses based on remembered character facts, campaign beats, and player preferences."
     ),
     tools=[
@@ -250,6 +271,7 @@ root_agent = Agent(
         adventure_flavor_text,
         get_story_beats,
         save_story_beat,
+        get_image_asset_url,
         PreloadMemoryTool(),
     ],
     after_agent_callback=generate_memories_callback,
