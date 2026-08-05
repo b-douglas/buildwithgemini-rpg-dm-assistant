@@ -73,6 +73,7 @@ MEMORY_SERVICE_URI = "shared://memory"
 @functools.cache
 def get_memory_service():
     """Process-wide memory service using Vertex AI Memory Bank."""
+    import json
     from google.adk.memory import VertexAiMemoryBankService
 
     project = os.environ.get("GOOGLE_CLOUD_PROJECT", "qwiklabs-gcp-04-b94d5857ae5f")
@@ -81,9 +82,20 @@ def get_memory_service():
         or os.environ.get("GOOGLE_CLOUD_LOCATION")
         or "us-east1"
     )
-    agent_engine_id = os.environ.get(
-        "GOOGLE_CLOUD_AGENT_ENGINE_ID", "442285149342662656"
-    )
+    agent_engine_id = os.environ.get("GOOGLE_CLOUD_AGENT_ENGINE_ID")
+    if not agent_engine_id:
+        meta_path = os.path.join(_AGENT_DIR, "deployment_metadata.json")
+        if os.path.exists(meta_path):
+            try:
+                with open(meta_path) as f:
+                    meta = json.load(f)
+                resource_name = meta.get("remote_agent_runtime_id", "")
+                if resource_name:
+                    agent_engine_id = resource_name.split("/")[-1]
+            except Exception:
+                pass
+    if not agent_engine_id:
+        agent_engine_id = "895459861846818816"
 
     return VertexAiMemoryBankService(
         project=project,
